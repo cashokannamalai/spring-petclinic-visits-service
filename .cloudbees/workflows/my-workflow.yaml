@@ -15,5 +15,5 @@ jobs:
       - uses: docker://maven:3-eclipse-temurin-17
         name: Maven
         kind: build
-        run: java --version
+        run: ls
         shell: sh
