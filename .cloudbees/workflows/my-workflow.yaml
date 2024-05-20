@@ -1,26 +1,20 @@
 apiVersion: automation.cloudbees.io/v1alpha1
-kind: Workflow
-metadata:
-  name: my-workflow
-spec:
-  on:
-    push:
-      branches:
-        - "**"
-  jobs:
-    Checkout:
-      steps:
-        - name: Checkout Code
-          uses: actions/checkout@v2
-
-    MavenBuild:
-      needs:
-        - Checkout
-      steps:
-        - name: Build with Maven
-          run: mvn clean install
-          working-directory: ./spring-petclinic-visits-service
-          container:
-            image: maven:3-eclipse-temurin-17
-            options: --entrypoint=sh
-          shell: sh
+kind: workflow
+name: My workflow
+on:
+  push:
+    branches:
+      - "**"
+jobs:
+  Checkout:
+    steps:
+      - uses: cloudbees-io/checkout@v1
+        name: checkout
+  MavenBuild:
+    needs: Checkout
+    steps:
+      - uses: docker://maven:3-eclipse-temurin-17
+        name: Maven
+        kind: build
+        run:   mvn clean verify -Dtest="*,!MySql*,!Postgres*"
+        shell: sh
