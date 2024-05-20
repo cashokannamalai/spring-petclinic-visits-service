@@ -10,7 +10,7 @@ on:
 jobs:
   Checkout:
     steps:
-    - uses: cloudbees.io/checkout@v1
+    - uses: cloudbees-io/checkout@v1
       name: checkout
   MavenBuild:
     steps:
