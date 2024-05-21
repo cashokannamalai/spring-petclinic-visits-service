@@ -15,5 +15,5 @@ jobs:
       - uses: docker://maven:3-eclipse-temurin-17
         name: Maven
         kind: build
-        run:   mvn clean package -f spring-petclinic-visits-service/pom.xml
+        run:   mvn clean package spring-petclinic-visits-service/pom.xml
         shell: sh
