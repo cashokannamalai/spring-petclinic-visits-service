@@ -18,7 +18,7 @@ jobs:
         name: Maven
         kind: build
         run:   |
-          ls 
-          cd spring-petclinic-visits-service || exit 1
+          ls -l
+          
           mvn clean package
         shell: sh
