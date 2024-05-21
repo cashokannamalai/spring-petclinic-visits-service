@@ -13,7 +13,7 @@ jobs:
         with:
           repository: cashokannamalai/spring-petclinic-visits-service
           ref: main
-          run:   mvn clean install
+          run: mvn clean install
           shell: sh
          
           
