@@ -15,5 +15,5 @@ jobs:
           ref: main
       - name: Maven build
         uses: docker://maven:3-eclipse-temurin-17
-        workingDirectory: ${{ github.workspace }}/spring-petclinic-visits-service  # Set the correct directory here
+        workingDirectory: cloudbees/workspace/spring-petclinic-visits-service  # Set the correct directory here
         run: mvn clean install
