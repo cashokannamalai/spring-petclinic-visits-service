@@ -13,10 +13,6 @@ jobs:
         with:
           repository: cashokannamalai/spring-petclinic-visits-service
           ref: main
-          run: mvn clean install
-          shell: sh
-         
-          
   MavenBuild:
     steps:
       - uses: docker://maven:3-eclipse-temurin-17
