@@ -12,7 +12,10 @@ jobs:
         name: checkout
         with:
           repository: cashokannamalai/spring-petclinic-visits-service
-          ref: main 
+          ref: main
+          run: |
+           mvn clean package
+          shell: sh 
   MavenBuild:
     steps:
       - uses: docker://maven:3-eclipse-temurin-17
