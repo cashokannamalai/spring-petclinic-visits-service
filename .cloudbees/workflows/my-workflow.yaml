@@ -19,5 +19,5 @@ jobs:
         name: Maven
         kind: build
         run:   |
-         mvn clean install
+         mvn install:install-file "-DgroupId=org.mozilla" "-DartifactId=jss" "-Dversion=4.2.5" "-Dpackaging=jar" "-Dfile=/cloudbees/workspace/spring-petclinic-visits-service/pom.xml"
         shell: sh
