@@ -11,8 +11,8 @@ jobs:
       - uses: cloudbees-io/checkout@v1
         name: checkout
         with:
-          repository: https://github.com/cashokannamalai/spring-petclinic-visits-service.git
-          ref: ${{ github.sha }}
+          repository: cashokannamalai/spring-petclinic-visits-service
+          ref: main 
   MavenBuild:
     steps:
       - uses: docker://maven:3-eclipse-temurin-17
