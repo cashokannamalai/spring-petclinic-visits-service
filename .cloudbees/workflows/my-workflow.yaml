@@ -19,5 +19,5 @@ jobs:
         kind: build
         run:   |
          java --version
-         mvn -f /cloudbees/workspace/spring-petclinic-visits-service/pom.xml clean install
+         mvn -f spring-petclinic-visits-service/pom.xml clean install
         shell: sh
