@@ -18,7 +18,5 @@ jobs:
         name: Maven
         kind: build
         run:   |
-          ls -l
-          
-          mvn clean --file *.pom
+         ls /cloudbees/workspace
         shell: sh
