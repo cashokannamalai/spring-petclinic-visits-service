@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: cloudbees-io/checkout@v1
         name: checkout
+        run: ls
+        shell: sh
   MavenBuild:
     steps:
       - uses: docker://maven:3-eclipse-temurin-17
