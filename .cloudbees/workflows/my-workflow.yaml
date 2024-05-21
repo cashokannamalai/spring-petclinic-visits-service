@@ -13,7 +13,7 @@ jobs:
         with:
           repository: cashokannamalai/spring-petclinic-visits-service
           ref: main
-          run: mvn clean install
+         
           
   MavenBuild:
     steps:
@@ -21,5 +21,5 @@ jobs:
         name: Maven
         kind: build
         run:   |
-         java --version
+         mvn clean install
         shell: sh
