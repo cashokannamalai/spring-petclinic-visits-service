@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: cloudbees-io/checkout@v1
         name: checkout
-        run: ls
+        run: java --version
         shell: sh
   MavenBuild:
     steps:
@@ -18,5 +18,5 @@ jobs:
         name: Maven
         kind: build
         run:   |
-         ls /cloudbees/workspace
+         mvn clean package 
         shell: sh
