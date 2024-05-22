@@ -29,5 +29,5 @@ jobs:
         with:
           server-url: https://sonarqube.cb-demos.io
           username: admin
-          password: ${{ secrets.SONAR_PASSWD }}
+          password: admin123
           language: "LANGUAGE_JAVA"
