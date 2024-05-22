@@ -47,3 +47,4 @@ scan:
         with:
           project-key: visits-service
           token: 757bae03cf1b3dbe7c635886062a0ff12bd22683
+          
