@@ -25,10 +25,7 @@ jobs:
   scan:
     needs: ci-job
     steps:
-      - uses: docker://alpine:latest
-        run: |
-          # Adjust permissions for SonarScanner
-          chown -R $(whoami) /cloudbees/workspace
+      
 
       - uses: cloudbees-io/sonarqube-sast-scan-code@v1
         name: Scan
