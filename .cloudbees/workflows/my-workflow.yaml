@@ -25,6 +25,11 @@ jobs:
   scan:
     needs: ci-job
     steps:
+      - uses: docker://alpine:latest
+        run: |
+          # Adjust permissions for SonarScanner
+          chown -R $(whoami) /cloudbees/workspace
+
       - uses: cloudbees-io/sonarqube-sast-scan-code@v1
         name: Scan
         kind: scan
@@ -33,16 +38,19 @@ jobs:
           username: admin
           password: ${{ secrets.SONAR_PASSWD }}
           language: Java
+
       - uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         name: Scan 2
         kind: scan
         with:
           language: JAVA
+
       - uses: cloudbees-io/findsecbugs-sast-scan-code@v1
         name: Scan with Find Security Bugs
         kind: scan
         with:
           language: LANGUAGE_JAVA
+
       - uses: sbatchelder-cba/sonarqube-cba@v0.0.3
         name: Scan GP
         with:
