@@ -22,9 +22,6 @@ jobs:
         run: |
           mvn clean install 
 
-
-  scan:
-    steps:
       - name: SonarQube Scan
         uses: cloudbees/sonarqube-scan:2
         with:
