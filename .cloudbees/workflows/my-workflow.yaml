@@ -22,7 +22,7 @@ jobs:
         run: |
           mvn clean install 
       
-scan:
+  scan:
     steps:
       - uses: cloudbees-io/sonarqube-sast-scan-code@v1
         name: Scan
