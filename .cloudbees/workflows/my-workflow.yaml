@@ -23,6 +23,7 @@ jobs:
           mvn clean install 
       
   scan:
+    needs: ci-job
     steps:
       - uses: docker://alpine:latest
         run: |
