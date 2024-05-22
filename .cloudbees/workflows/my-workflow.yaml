@@ -25,6 +25,6 @@ jobs:
       - name: SonarQube Scan
         uses: cloudbees/sonarqube-scan:2
         with:
-          token: ${{ secrets.SONAR_PASSWD }}
+          token: 757bae03cf1b3dbe7c635886062a0ff12bd22683
           url: 'https://sonarqube.cb-demos.io'
           maven-plugin-version: '3.9.0.2155'
