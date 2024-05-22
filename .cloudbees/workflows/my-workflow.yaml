@@ -47,5 +47,5 @@ jobs:
         name: Scan GP
         with:
           project-key: visits-service
-          token: 757bae03cf1b3dbe7c635886062a0ff12bd22683
+          token: 20e414018be1508e8a472229e7ec07da1a13cfa1
           
