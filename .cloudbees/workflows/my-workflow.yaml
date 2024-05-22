@@ -23,6 +23,7 @@ jobs:
           mvn clean install 
       
   scan:
+    needs: ci-job
     steps:
       - uses: cloudbees-io/sonarqube-sast-scan-code@v1
         name: Scan
