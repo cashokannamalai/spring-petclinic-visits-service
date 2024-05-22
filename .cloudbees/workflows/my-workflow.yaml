@@ -21,10 +21,13 @@ jobs:
         uses: docker://maven:3-eclipse-temurin-17
         run: |
           mvn clean install 
+      
 
-      - name: SonarQube Scan
-        uses: cloudbees/sonarqube-scan:2
+
+      - name: Scan with SonarQube bundled
+        uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
         with:
-          token: 757bae03cf1b3dbe7c635886062a0ff12bd22683
-          url: 'https://sonarqube.cb-demos.io'
-          maven-plugin-version: '3.9.0.2155'
+          server-url: https://sonarqube.cb-demos.io
+          username: admin
+          password: ${{ secrets.SONAR_PASSWD }}
+          language: "LANGUAGE_JAVA"
