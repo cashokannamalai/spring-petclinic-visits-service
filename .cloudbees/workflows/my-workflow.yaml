@@ -11,17 +11,20 @@ jobs:
   checkout:
     steps:
       - uses: docker://alpine/git:latest
-        run: |
+        script: |
           git config --global --add safe.directory /cloudbees/workspace
       - name: checkout
         uses: cloudbees-io/checkout@v1
+        with:
+          path: /cloudbees/workspace
 
   Build:
     needs: checkout
     steps:
       - name: Build 
         uses: docker://maven:3-eclipse-temurin-17
-        run: |
+        script: |
+          cd /cloudbees/workspace
           mvn clean install 
       
   scan:
