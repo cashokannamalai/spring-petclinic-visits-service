@@ -35,10 +35,9 @@ jobs:
       - name: SonarQube scan
         uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
-          sonar-scanner -X \
-          -Dsonar.projectKey=visits-service \
-          -Dsonar.sources=spring-petclinic-visits-service/src \
-          -Dsonar.java.binaries=target/classes \
-          -Dsonar.host.url=https://sonarqube.cb-demos.io \
-          -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
-   
+           sonar-scanner \
+           -Dsonar.projectKey=visits-service \
+           -Dsonar.sources=spring-petclinic-visits-service/src \
+           -Dsonar.java.binaries=target/classes \
+           -Dsonar.host.url=https://sonarqube.cb-demos.io \
+           -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
