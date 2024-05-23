@@ -31,7 +31,7 @@ jobs:
   ListAndAnalyze:
     needs: [Build]
     steps:
-      - name: List directory contents
+      - name: List directory contents after Build
         uses: docker://alpine:latest
         run: |
           echo "Current directory: $(pwd)"
