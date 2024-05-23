@@ -28,15 +28,24 @@ jobs:
         run: |
           mvn clean install
 
-  SonarAnalysis:
+  ListAndAnalyze:
     needs: [Build]
     steps:
+      - name: List directory contents
+        uses: docker://alpine:latest
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -lR /cloudbees/workspace
+
       - name: SonarQube analysis
         uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
+          echo "Current directory: $(pwd)"
+          ls -lR /cloudbees/workspace
+          cd /cloudbees/workspace/spring-petclinic-visits-service 
           sonar-scanner \
             -Dsonar.projectKey=visits-service \
             -Dsonar.sources=src/main/java \
-            -Dsonar.java.binaries=/cloudbees/workspace/project/target/classes \
+            -Dsonar.java.binaries=target/classes \
             -Dsonar.host.url=https://sonarqube.cb-demos.io \
             -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
