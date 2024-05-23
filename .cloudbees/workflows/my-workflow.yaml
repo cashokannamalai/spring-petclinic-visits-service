@@ -31,11 +31,6 @@ jobs:
   SonarQubeScan:
     needs: [Build]
     steps:
-      - name: Install SonarScanner
-        uses: docker://maven:3-eclipse-temurin-17
-        run: |
-          apk add --no-cache openjdk11 sonar-scanner
-
       - name: SonarQube scan
         uses: docker://maven:3-eclipse-temurin-17
         run: |
