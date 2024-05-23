@@ -31,8 +31,8 @@ jobs:
   SonarQubeScan:
     needs: [Build]
     steps:
-      
-      - uses: docker://alpine/git:latest
+      - name: SonarQube scan
+        uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
           git config --global --add safe.directory /cloudbees/workspace
           uses: docker://sonarsource/sonar-scanner-cli:latest
