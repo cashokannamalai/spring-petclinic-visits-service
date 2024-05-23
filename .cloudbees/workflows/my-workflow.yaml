@@ -28,9 +28,6 @@ jobs:
         run: |
           mvn clean install
 
-  SonarQube:
-    needs: [Build]
-    steps:
       - name: SonarQube analysis
         uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
@@ -39,5 +36,3 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarqube.cb-demos.io \
             -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
-
-            
