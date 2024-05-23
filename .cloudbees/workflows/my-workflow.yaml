@@ -8,7 +8,14 @@ on:
       - '**'
 
 jobs:
+  checkout:
+    steps:
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
+
+
   Build:
+    needs: checkout
     steps:
       - uses: docker://alpine/git:latest
         run: |
