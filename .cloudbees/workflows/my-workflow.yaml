@@ -35,13 +35,13 @@ jobs:
         uses: docker://alpine:latest
         run: |
           echo "Current directory: $(pwd)"
-          ls -lR /cloudbees/workspace
+          ls -lR /cloudbees/workspace/spring-petclinic-visits-service
 
       - name: SonarQube analysis
         uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
           echo "Current directory: $(pwd)"
-          ls -lR /cloudbees/workspace
+          ls -lR /cloudbees/workspace/spring-petclinic-visits-service
           sonar-scanner \
             -Dsonar.projectKey=visits-service \
             -Dsonar.sources=src/main/java \
