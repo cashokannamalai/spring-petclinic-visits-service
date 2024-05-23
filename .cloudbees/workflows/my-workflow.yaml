@@ -42,7 +42,7 @@ jobs:
         uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=visits-service \
+            -Dsonar.projectKey=visits \
             -Dsonar.sources=/cloudbees/workspace \
             -Dsonar.java.binaries=/cloudbees/workspace/target/classes \
             -Dsonar.host.url=https://sonarqube.cb-demos.io \
