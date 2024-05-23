@@ -28,16 +28,14 @@ jobs:
         run: |
           mvn clean install
 
-  SonarQubeScan:
+  SonarQube:
     needs: [Build]
     steps:
-      - name: SonarQube scan
-        uses: docker://maven:3-eclipse-temurin-17
+      - name: SonarQube analysis
+        uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |
-          git config --global --add safe.directory /cloudbees/workspace
           sonar-scanner \
-           -Dsonar.projectKey=visits-service \
-           -Dsonar.sources=/cloudbees/workspace/spring-petclinic-visits-service/src \
-           -Dsonar.java.binaries=/cloudbees/workspace/spring-petclinic-visits-service/target/classes \
-           -Dsonar.host.url=https://sonarqube.cb-demos.io \
-           -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
+            -Dsonar.projectKey=visits-service \
+            -Dsonar.sources=src \
+            -Dsonar.host.url=https://sonarqube.cb-demos.io \
+            -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
