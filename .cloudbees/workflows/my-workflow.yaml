@@ -8,14 +8,17 @@ on:
       - '**'
 
 jobs:
-  ci-job:
+  checkout:
+    steps:
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
+
+  Build:
+    needs: checkout
     steps:
       - uses: docker://alpine/git:latest
         run: |
           git config --global --add safe.directory /cloudbees/workspace
-
-      - name: checkout
-        uses: cloudbees-io/checkout@v1
 
       - name: Build 
         uses: docker://maven:3-eclipse-temurin-17
@@ -23,10 +26,8 @@ jobs:
           mvn clean install 
       
   scan:
-    needs: ci-job
+    needs: Build
     steps:
-      
-
       - uses: cloudbees-io/sonarqube-sast-scan-code@v1
         name: Scan
         kind: scan
