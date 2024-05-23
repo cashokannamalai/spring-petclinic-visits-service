@@ -15,8 +15,6 @@ jobs:
           git config --global --add safe.directory /cloudbees/workspace
       - name: checkout
         uses: cloudbees-io/checkout@v1
-        with:
-          path: /cloudbees/workspace
 
   Build:
     needs: checkout
@@ -24,7 +22,6 @@ jobs:
       - name: Build 
         uses: docker://maven:3-eclipse-temurin-17
         run: |
-          ls -l
           mvn clean install 
       
   scan:
