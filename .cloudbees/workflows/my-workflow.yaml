@@ -36,6 +36,6 @@ jobs:
         run: |
           sonar-scanner \
             -Dsonar.projectKey=visits-service \
-            -Dsonar.sources=src \
+            -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarqube.cb-demos.io \
             -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
