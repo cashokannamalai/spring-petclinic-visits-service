@@ -47,3 +47,23 @@ jobs:
             -Dsonar.java.binaries=/cloudbees/workspace/target/classes \
             -Dsonar.host.url=https://sonarqube.cb-demos.io \
             -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
+
+
+
+  NexusPublish:
+    needs: [Build]
+    steps:
+      - name: Publish to Nexus
+        uses: docker://maven:3-eclipse-temurin-17
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: |
+          mvn deploy -DskipTests \
+            -DaltDeploymentRepository=nexus::default::https://${NEXUS_USERNAME}:${NEXUS_PASSWORD}@nexus.preview.cb-demos.io/repository/maven-releases/
+
+      - name: List directory contents after Publish
+        uses: docker://alpine:latest
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -lR /cloudbees/workspace
