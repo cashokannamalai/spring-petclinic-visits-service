@@ -69,7 +69,7 @@ jobs:
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           mvn deploy -DskipTests \
-            -DaltDeploymentRepository=nexus::default::https://${NEXUS_USERNAME}:${NEXUS_PASSWORD}@nexus.preview.cb-demos.io/repository/maven-releases/
+            -DaltDeploymentRepository=nexus::default::https://${NEXUS_USERNAME}:${NEXUS_PASSWORD}@nexus.preview.cb-demos.io/repository/visitsservice/
 
       - name: List directory contents after Publish
         uses: docker://alpine:latest
