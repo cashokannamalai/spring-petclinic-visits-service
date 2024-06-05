@@ -82,28 +82,11 @@ jobs:
   DeployToEC2:
     needs: [NexusPublish]
     steps:
-      - name: create PEM file from secret
-        uses: docker://alpine:latest
-        run: |
-         echo "${{ secrets.KEY }}" > /cloudbees/workspace/ec2_key.pem
-         chmod 600 /cloudbees/workspace/ec2_key.pem 
-
-      - name: List directory contents after Publish
-        uses: docker://alpine:latest
-        run: |
-         echo "Current directory: $(pwd)"
-         ls -lR /cloudbees/workspace
-
-      - name: Deploy to EC2
-        uses: docker://alpine:latest
-        env:
-          EC2_USER: ubuntu
-          EC2_HOST: ip-172-31-85-104
-          KEY_PATH: /cloudbees/workspace/ec2_key.pem
-          JAR_FILE: /cloudbees/workspace/spring-petclinic-visits-service/target/*.jar
-        run: |
-         apk add --no-cache openssh
-        
-
-          scp -i ${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
-          ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &'
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: Ubuntu
+          username: ip-172-31-85-104
+          key: ${{ secrets.KEY }}
+          source: /cloudbees/workspace/target/*.jar
+          target: /home/ubuntu/*.jar
