@@ -110,7 +110,7 @@ jobs:
           EC2_USER: ubuntu
           EC2_HOST: ip-172-31-85-104
           KEY_PATH: /cloudbees/workspace/ec2_key.pem
-          JAR_FILE: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
+          JAR_FILE: /cloudbees/workspace/spring-petclinic-visits-service/target/spring-petclinic-visits-service-3.2.4.jar
         run: |
          apk add --no-cache openssh
           scp -i ${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
