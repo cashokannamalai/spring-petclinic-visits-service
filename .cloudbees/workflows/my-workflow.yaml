@@ -76,23 +76,44 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -lR /cloudbees/workspace
+  
+
+
   DeployToEC2:
     needs: [NexusPublish]
     steps:
+      - uses: docker://alpine/git:latest
+        run: |
+         git config --global --add safe.directory /cloudbees/workspace
+         echo "Listing directory contents before Build:"
+         ls -lR /cloudbees/workspace
+
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
+
+    
+      - name: create PEM file from secret
+        uses: docker://alpine:latest
+        run: |
+         echo "${{ secrets.KEY }}" > /cloudbees/workspace/ec2_key.pem
+         chmod 600 /cloudbees/workspace/ec2_key.pem 
+
       - name: List directory contents after Publish
         uses: docker://alpine:latest
         run: |
-          echo "Current directory: $(pwd)"
-          ls -lR /cloudbees/workspace
+         echo "Current directory: $(pwd)"
+         ls -lR /cloudbees/workspace
 
       - name: Deploy to EC2
         uses: docker://alpine:latest
         env:
-          EC2_USER: Ubuntu
+          EC2_USER: ubuntu
           EC2_HOST: ip-172-31-85-104
-          KEY_PATH: ${{ secrets.KEY }}
-          JAR_FILE: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
+          KEY_PATH: /cloudbees/workspace/ec2_key.pem
+          JAR_FILE: /cloudbees/workspace/target/your-app.jar
         run: |
-          apk add --no-cache openssh
-          scp -i ${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
-          ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &'
+         apk add --no-cache openssh
+         echo "Copying JAR file to EC2 instance..."
+         scp -i ${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
+         echo "Starting application on EC2 instance..."
+         ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &'
