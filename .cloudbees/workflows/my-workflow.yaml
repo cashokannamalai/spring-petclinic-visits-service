@@ -103,5 +103,7 @@ jobs:
           JAR_FILE: /cloudbees/workspace/spring-petclinic-visits-service/target/spring-petclinic-visits-service-3.2.4.jar
         run: |
          apk add --no-cache openssh
+          ls -l /cloudbees/workspace/spring-petclinic-visits-service/target/
+
           scp -i ${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
           ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &'
