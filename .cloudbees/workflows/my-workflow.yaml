@@ -76,4 +76,23 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -lR /cloudbees/workspace
-          
+  DeployToEC2:
+    needs: [NexusPublish]
+    steps:
+      - name: List directory contents after Publish
+        uses: docker://alpine:latest
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -lR /cloudbees/workspace
+
+      - name: Deploy to EC2
+        uses: docker://alpine:latest
+        env:
+          EC2_USER: Ubuntu
+          EC2_HOST: ip-172-31-85-104
+          KEY_PATH: ${{ secrets.KEY }}
+          JAR_FILE: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
+        run: |
+          apk add --no-cache openssh
+          scp -i ${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
+          ssh -i ${KEY_PATH} ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &'
