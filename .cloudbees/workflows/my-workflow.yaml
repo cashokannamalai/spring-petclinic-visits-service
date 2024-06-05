@@ -82,16 +82,6 @@ jobs:
   DeployToEC2:
     needs: [NexusPublish]
     steps:
-      - uses: docker://alpine/git:latest
-        run: |
-         git config --global --add safe.directory /cloudbees/workspace
-         echo "Listing directory contents before Build:"
-         ls -lR /cloudbees/workspace
-
-      - name: checkout
-        uses: cloudbees-io/checkout@v1
-
-    
       - name: create PEM file from secret
         uses: docker://alpine:latest
         run: |
