@@ -72,6 +72,13 @@ jobs:
     needs:
       - NexusPublish
     steps:
+      - uses: docker://alpine/git:latest
+        run: |
+          git config --global --add safe.directory /cloudbees/workspace
+          ls
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
+        
       - name: Verify artifact before deploy
         uses: docker://alpine:latest
         run: |
