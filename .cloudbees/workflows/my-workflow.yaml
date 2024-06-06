@@ -69,30 +69,22 @@ jobs:
 
 
   DeployToEC2:
-    needs:
-      - NexusPublish
+    needs: [NexusPublish]
     steps:
-      - name: Install AWS CLI
-        uses: docker://amazonlinux:latest
-        run: |
-          
-      - name: Create SSH Key File
-        uses: docker://alpine:latest
-        env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-        run: |
-          echo "${EC2_SSH_KEY}" > /tmp/ashok-lf.pem
-          chmod 600 /tmp/ashok-lf.pem
-      - name: Deploy to EC2
-        uses: docker://amazonlinux:latest
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-        run: |
-          
-          scp -i /tmp/ashok-lf.pem -r /cloudbees/workspace/target/ ubuntu@54.145.119.113:/home/ubuntu
-          ssh -i /tmp/ashok-lf.pem ubuntu@54.145.119.113 << 'EOF'
-            cd /home/ubuntu
-            
-          EOF
+    - name: List directory contents after Publish
+      uses: docker://alpine:latest
+      run: |
+        echo "Current directory: $(pwd)"
+        ls -lR /cloudbees/workspace
+
+    - name: Deploy to EC2
+      uses: docker://alpine:latest
+      env:
+        EC2_USER: ubuntu
+        EC2_HOST: 54.145.119.113
+        KEY_PATH: ${{ secrets.EC2_SSH_KEY }}
+        JAR_FILE: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
+      run: |
+        apk add --no-cache openssh
+        scp -o StrictHostKeyChecking=no -i /run/secrets/${KEY_PATH} ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
+        ssh -o StrictHostKeyChecking=no -i /run/secrets/${KEY_PATH} ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &' 
