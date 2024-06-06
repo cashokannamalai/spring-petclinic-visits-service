@@ -65,3 +65,14 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -lR /cloudbees/workspace
+  Deploy:
+    steps:
+      - uses: cloudbees-io/ec2-deploy-binary@v1
+        kind: deploy
+        with:
+          aws-host: https://54.145.119.113
+          aws-ssh-key-data: ${{ secrets.KEY }}
+          aws-user: ubuntu
+          source-location: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
+          destination-ec2-location: /home/ubuntu/
+          deploy-command: java -jar spring-petclinic-visits-service-3.2.4.jar
