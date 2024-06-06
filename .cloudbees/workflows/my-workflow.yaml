@@ -68,25 +68,31 @@ jobs:
   
 
 
-  Deploy:
+  DeployToEC2:
     needs:
       - NexusPublish
     steps:
-      - uses: docker://alpine/git:latest
+      - name: Install AWS CLI
+        uses: docker://amazonlinux:latest
         run: |
-          git config --global --add safe.directory /cloudbees/workspace
-          ls
-      - name: checkout
-        uses: cloudbees-io/checkout@v1
-        
-      
-      - name: Deploy to EC2
+          yum install -y aws-cli
+      - name: Create SSH Key File
         uses: docker://alpine:latest
         env:
-          KEY: ${{ secrets.KEY }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          apk add --no-cache openssh
-          echo "${{ secrets.KEY }}" > /tmp/key.pem
-          chmod 600 /tmp/key.pem
-          scp -o StrictHostKeyChecking=no -i /tmp/key.pem target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
-          ssh -o StrictHostKeyChecking=no -i /tmp/key.pem ubuntu@54.145.119.113 "java -jar /home/ubuntu/spring-petclinic-visits-service-3.2.4.jar"
+          echo "${EC2_SSH_KEY}" > /tmp/ashok-lf.pem
+          chmod 600 /tmp/ashok-lf.pem
+      - name: Deploy to EC2
+        uses: docker://amazonlinux:latest
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+        run: |
+          aws ec2 describe-instances
+          scp -i /tmp/ashok-lf.pem -r /cloudbees/workspace/target/ ubuntu@54.145.119.113:/home/ubuntu
+          ssh -i /tmp/ashok-lf.pem ubuntu@54.145.119.113 << 'EOF'
+            cd /home/ubuntu
+            
+          EOF
