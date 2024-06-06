@@ -79,11 +79,7 @@ jobs:
       - name: checkout
         uses: cloudbees-io/checkout@v1
         
-      - name: Verify artifact before deploy
-        uses: docker://alpine:latest
-        run: |
-          echo "Verifying artifact before deployment:"
-          ls -lR /cloudbees/workspace/target
+      
       - name: Deploy to EC2
         uses: docker://alpine:latest
         env:
@@ -92,5 +88,5 @@ jobs:
           apk add --no-cache openssh
           echo "${{ secrets.KEY }}" > /tmp/key.pem
           chmod 600 /tmp/key.pem
-          scp -o StrictHostKeyChecking=no -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
+          scp -o StrictHostKeyChecking=no -i /tmp/key.pem target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
           ssh -o StrictHostKeyChecking=no -i /tmp/key.pem ubuntu@54.145.119.113 "java -jar /home/ubuntu/spring-petclinic-visits-service-3.2.4.jar"
