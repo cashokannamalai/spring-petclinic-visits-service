@@ -71,9 +71,9 @@ jobs:
       - uses: cloudbees-io/ec2-deploy-binary@v1
         kind: deploy
         with:
-          aws-host: https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#InstanceDetails:instanceId=i-0c7bf21344ea96cd6
+          aws-host: https://54.145.119.113
           aws-ssh-key-data: ${{ secrets.KEY }}
-          aws-user: Ubuntu
+          aws-user: ubuntu
           source-location: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
           destination-ec2-location: /home/ubuntu/
           deploy-command: java -jar spring-petclinic-visits-service-3.2.4.jar
