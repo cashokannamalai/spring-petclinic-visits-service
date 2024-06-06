@@ -67,29 +67,14 @@ jobs:
           ls -lR /cloudbees/workspace
   
 
-  DeployToEC2:
-    needs: [NexusPublish]
+  Deploy:
     steps:
-    - name: List directory contents after Publish
-      uses: docker://alpine:latest
-      run: |
-        echo "Current directory: $(pwd)"
-        ls -lR /cloudbees/workspace
-
-    - name: Install SSH and SCP
-      uses: docker://alpine:latest
-      run: |
-        apk add --no-cache openssh
-
-    - name: Deploy to EC2
-      uses: docker://alpine:latest
-      env:
-        EC2_USER: ubuntu
-        EC2_HOST: 54.145.119.113
-        KEY_PATH: /run/secrets/ec2_ssh_key.pem
-        JAR_FILE: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
-      run: |
-        echo "${{ secrets.EC2_SSH_KEY }}" > /run/secrets/ec2_ssh_key.pem
-        chmod 600 /run/secrets/ec2_ssh_key.pem
-        scp -o StrictHostKeyChecking=no -i /run/secrets/ec2_ssh_key.pem ${JAR_FILE} ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/
-        ssh -o StrictHostKeyChecking=no -i /run/secrets/ec2_ssh_key.pem ${EC2_USER}@${EC2_HOST} 'nohup java -jar /home/${EC2_USER}/$(basename ${JAR_FILE}) > /home/${EC2_USER}/app.log 2>&1 &'
+      - name: Deploy EC2 binary
+        uses: cloudbees-io/ec2-deploy-binary@v1
+        with:
+          source-location: workspace/target/spring-petclinic-visits-service-3.2.4.jar
+          destination-ec2-location: /home/ubuntu
+          aws-ssh-key-data: ${{ secrets.EC2_SSH_KEY }}
+          aws-user: ubuntu
+          aws-host:  54.145.119.113
+          deploy-script: java -jar spring-petclinic-visits-service-3.2.4.jar
