@@ -28,17 +28,17 @@ jobs:
         run: |
           ls -l /cloudbees/workspace/target
 
-  
-
   DeployToEC2:
     needs: Build
     steps:
       - name: Deploy EC2 binary
         uses: docker://cloudbees/ec2-deploy-binary:latest
+        entrypoint: sh
+        run: |
+          java -jar /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
         with:
           source-location: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
           destination-ec2-location: /home/ubuntu
           aws-ssh-key-data: ${{ secrets.EC2_SSH_KEY }}
           aws-user: ubuntu
           aws-host: 54.145.119.113
-          deploy-script: java -jar spring-petclinic-visits-service-3.2.4.jar
