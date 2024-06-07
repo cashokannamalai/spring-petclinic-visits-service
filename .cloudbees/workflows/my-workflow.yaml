@@ -101,15 +101,15 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "$EC2_SSH_KEY" > /tmp/key.pem
-          chmod 600 /tmp/key.pem
-           cat /tmp/key.pem
+          echo "$EC2_SSH_KEY" > /cloudbees/workspace/key.pem
+          chmod 600 /cloudbees/workspace/key.pem
+           cat /cloudbees/workspace/key.pem
 
       - name: List built files
         uses: docker://alpine:latest
         run: |
           ls -l /cloudbees/workspace/target
           apk add --no-cache openssh
-          scp -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
+          scp -i /cloudbees/workspace/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
 
           
