@@ -41,8 +41,7 @@ jobs:
           EC2_HOST: 54.145.119.113
         run: |
           
-          echo "$EC2_SSH_KEY" > ssh_key
-          chmod 600 ssh_key
+          echo "$EC2_SSH_KEY" > /cloudbees/workspace/ssh_key
+          chmod 777 /cloudbees/workspace/ssh_key
+          ls -l /cloudbees/workspace
           
-          
-          scp -i ssh_key -o StrictHostKeyChecking=no /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/spring-petclinic-visits-service-3.2.4.jar
