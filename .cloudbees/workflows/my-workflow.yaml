@@ -80,9 +80,6 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -lR /cloudbees/workspace
-
-      
-
           
       - uses: docker://alpine/git:latest
         run: |
@@ -104,13 +101,15 @@ jobs:
           echo "$EC2_SSH_KEY" > /cloudbees/workspace/key.pem
           chmod 600 /cloudbees/workspace/key.pem
           ls -l /cloudbees/workspace/
-           
+
+      - name: Add remote host to known hosts
+        uses: docker://alpine:latest
+        run: |
+          apk add --no-cache openssh
+          ssh-keyscan 54.145.119.113 >> ~/.ssh/known_hosts
 
       - name: List built files
         uses: docker://alpine:latest
         run: |
           ls -l /cloudbees/workspace
-          apk add --no-cache openssh
           scp -i /cloudbees/workspace/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
-
-          
