@@ -41,4 +41,4 @@ jobs:
           aws-ssh-key-data: ${{ secrets.EC2_SSH_KEY }}
           aws-user: ubuntu
           aws-host: 54.145.119.113
-          deploy-script: script1.sh
+          deploy-script: java -jar spring-petclinic-visits-service-3.2.4.jar
