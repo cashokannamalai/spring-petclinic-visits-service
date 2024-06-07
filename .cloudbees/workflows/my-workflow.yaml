@@ -26,7 +26,7 @@ jobs:
       - name: List built files
         uses: docker://alpine:latest
         run: |
-          ls -l /tmp
+          ls -l /cloudbees/workspace/target
   SonarQubeAnalysis:
     needs:
       - Build
@@ -88,6 +88,14 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > /tmp/key.pem
           chmod 600 /tmp/key.pem
+
+          
+      - uses: docker://alpine/git:latest
+        run: |
+          git config --global --add safe.directory /cloudbees/workspace
+          ls
+      - name: checkout
+        uses: cloudbees-io/checkout@v1
 
       - name: Transfer JAR to EC2
         uses: docker://alpine:latest
