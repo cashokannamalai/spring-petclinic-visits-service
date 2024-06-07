@@ -27,89 +27,22 @@ jobs:
         uses: docker://alpine:latest
         run: |
           ls -l /cloudbees/workspace/target
-  SonarQubeAnalysis:
-    needs:
-      - Build
-    steps:
-      - name: List directory contents after Build
-        uses: docker://alpine:latest
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -lR /cloudbees/workspace
-      - name: SonarQube analysis
-        uses: docker://sonarsource/sonar-scanner-cli:latest
-        run: |
-          sonar-scanner \
-            -Dsonar.projectKey=visits \
-            -Dsonar.sources=/cloudbees/workspace \
-            -Dsonar.java.binaries=/cloudbees/workspace/target/classes \
-            -Dsonar.host.url=https://sonarqube.cb-demos.io \
-            -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
-  NexusPublish:
-    needs:
-      - SonarQubeAnalysis
-    steps:
-      - uses: docker://alpine/git:latest
-        run: |
-          git config --global --add safe.directory /cloudbees/workspace
-          echo "Listing directory contents before Build:"
-          ls -lR /cloudbees/workspace
-      - name: checkout
-        uses: cloudbees-io/checkout@v1
-      - name: Publish to Nexus
-        uses: docker://maven:3-eclipse-temurin-17
-        env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        run: >
-          mvn deploy -DskipTests \
-            -DaltDeploymentRepository=nexus::default::https://${NEXUS_USERNAME}:${NEXUS_PASSWORD}@nexus.preview.cb-demos.io/repository/visitsservice/
-      - name: List directory contents after Publish
-        uses: docker://alpine:latest
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -lR /cloudbees/workspace
+
   
 
   DeployToEC2:
-    needs:
-      - NexusPublish
+    needs: Build
     steps:
-      - name: List directory contents before Deploy
-        uses: docker://alpine:latest
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -lR /cloudbees/workspace
-          
-      - uses: docker://alpine/git:latest
-        run: |
-          git config --global --add safe.directory /cloudbees/workspace
-          ls
-      - name: checkout
-        uses: cloudbees-io/checkout@v1
-
-      - name: Build1
-        uses: docker://maven:3-eclipse-temurin-17
-        run: |
-          mvn clean install
-
-      - name: Create SSH key file
+      - name: Deploy to EC2
         uses: docker://alpine:latest
         env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_USER: ubuntu
+          EC2_HOST: 54.145.119.113
         run: |
-          echo "$EC2_SSH_KEY" > /cloudbees/workspace/key.pem
-          chmod 600 /cloudbees/workspace/key.pem
-          ls -l /cloudbees/workspace/
-
-      - name: Add remote host to known hosts
-        uses: docker://alpine:latest
-        run: |
-          apk add --no-cache openssh
-          ssh-keyscan 54.145.119.113 >> ~/.ssh/known_hosts
-
-      - name: List built files
-        uses: docker://alpine:latest
-        run: |
-          ls -l /cloudbees/workspace
-          scp -i /cloudbees/workspace/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
+          
+          echo "$EC2_SSH_KEY" > ssh_key
+          chmod 600 ssh_key
+          
+          
+          scp -i ssh_key -o StrictHostKeyChecking=no /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/spring-petclinic-visits-service-3.2.4.jar
