@@ -39,8 +39,7 @@ jobs:
           apk add openssh-client
           echo "$EC2_SSH_KEY" > /cloudbees/workspace/ssh-key.pem
           chmod 600 /cloudbees/workspace/ssh-key.pem
-          ls -l /cloudbees/workspace
-          scp -i /cloudbees/workspace/ssh-key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ec2-54-145-119-113.compute-1.amazonaws.com:~
+          ls -l /cloudbees/workspace/target
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_USER: ubuntu
