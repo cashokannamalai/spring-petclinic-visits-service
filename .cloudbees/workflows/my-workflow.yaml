@@ -32,20 +32,14 @@ jobs:
 
   DeployToEC2:
     needs: Build
-    steps:
-      - name: Deploy to EC2
+    steps:  
+      - name: Deploy EC2 binary
         uses: docker://alpine:latest
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_USER: ubuntu
-          EC2_HOST: 54.145.119.113
-        run: |
-          
-          echo "$EC2_SSH_KEY" > /cloudbees/workspace/ssh_key
-          chmod 777 /cloudbees/workspace/ssh_key
-          ls -l /cloudbees/workspace
-          cat /cloudbees/workspace/ssh_key
-
-          ssh -i /cloudbees/workspace/ssh_key -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} "mkdir -p /home/${EC2_USER}"
-
+        with:
+          source-location: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
+          destination-ec2-location: /home/ubuntu
+          aws-ssh-key-data: ${{ secrets.EC2_SSH_KEY }}
+          aws-user: ubuntu
+          aws-host: 54.145.119.113 
+          deploy-script: java -jar spring-petclinic-visits-service-3.2.4.jar
           
