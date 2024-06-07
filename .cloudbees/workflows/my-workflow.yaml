@@ -84,3 +84,9 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > /tmp/key.pem
           chmod 600 /tmp/key.pem
+
+      - name: Transfer JAR to EC2
+        uses: docker://alpine:latest
+        run: |
+          apk add --no-cache openssh
+          scp -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ip-172-31-85-104:/home/ubuntu/
