@@ -29,9 +29,6 @@ jobs:
         run: |
           ls -l /cloudbees/workspace/target
 
-  DeployToEC2:
-    needs: Build
-    steps:
       - name: Deploy to EC2
         uses: docker://alpine:latest
         run: |
