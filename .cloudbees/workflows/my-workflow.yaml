@@ -97,7 +97,13 @@ jobs:
       - name: checkout
         uses: cloudbees-io/checkout@v1
 
-      - name: Transfer JAR to EC2
+      - name: Build1
+        uses: docker://maven:3-eclipse-temurin-17
+        run: |
+          mvn clean install
+      - name: List built files
         uses: docker://alpine:latest
         run: |
-         ls -l /cloudbees/workspace/target
+          ls -l /cloudbees/workspace/target
+          apk add --no-cache openssh
+          scp -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ip-172-31-85-104:/home/ubuntu/
