@@ -103,6 +103,7 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > /cloudbees/workspace/key.pem
           chmod 600 /cloudbees/workspace/key.pem
+          ls -l /cloudbees/workspace/
            
 
       - name: List built files
