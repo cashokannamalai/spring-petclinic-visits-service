@@ -81,13 +81,7 @@ jobs:
           echo "Current directory: $(pwd)"
           ls -lR /cloudbees/workspace
 
-      - name: Create SSH key file
-        uses: docker://alpine:latest
-        env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-        run: |
-          echo "$EC2_SSH_KEY" > /tmp/key.pem
-          chmod 600 /tmp/key.pem
+      
 
           
       - uses: docker://alpine/git:latest
@@ -101,11 +95,20 @@ jobs:
         uses: docker://maven:3-eclipse-temurin-17
         run: |
           mvn clean install
+
+      - name: Create SSH key file
+        uses: docker://alpine:latest
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          echo "$EC2_SSH_KEY" > /tmp/key.pem
+          chmod 600 /tmp/key.pem
+
       - name: List built files
         uses: docker://alpine:latest
         run: |
           ls -l /cloudbees/workspace/target
           apk add --no-cache openssh
-          scp -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ip-172-31-85-104:/home/ubuntu/
+          scp -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@54.145.119.113:/home/ubuntu/
 
           
