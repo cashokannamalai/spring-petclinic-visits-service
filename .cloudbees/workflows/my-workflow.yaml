@@ -81,8 +81,8 @@ jobs:
       - name: checkout
         uses: cloudbees-io/checkout@v1
 
-      - name: Deploy to EC2
-        uses: docker://alpine:latest
+      - name: Build
+        uses: docker://maven:3-eclipse-temurin-17
         env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
