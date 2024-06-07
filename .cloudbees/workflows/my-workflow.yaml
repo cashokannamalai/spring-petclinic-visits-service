@@ -101,4 +101,9 @@ jobs:
         uses: docker://alpine:latest
         run: |
           apk add --no-cache openssh
-          scp -i /tmp/key.pem /target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ip-172-31-85-104:/home/ubuntu/
+          echo "Checking if JAR file exists..."
+          if [ ! -f /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ]; then
+          echo "JAR file not found at /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar"
+           exit 1
+          fi
+            scp -i /tmp/key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ip-172-31-85-104:/home/ubuntu/
