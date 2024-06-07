@@ -103,6 +103,7 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > /tmp/key.pem
           chmod 600 /tmp/key.pem
+           cat /tmp/key.pem
 
       - name: List built files
         uses: docker://alpine:latest
