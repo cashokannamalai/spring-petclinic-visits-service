@@ -67,15 +67,20 @@ jobs:
           ls -lR /cloudbees/workspace
   
 
-  Deploy:
-    needs: NexusPublish
+  DeployToEC2:
+    needs:
+      - NexusPublish
     steps:
-      - name: Deploy EC2 binary
-        uses: cloudbees-io/ec2-deploy-binary@v1
-        with:
-          source-location: workspace/target/spring-petclinic-visits-service-3.2.4.jar
-          destination-ec2-location: /home/ubuntu
-          aws-ssh-key-data: ${{ secrets.EC2_SSH_KEY }}
-          aws-user: ubuntu
-          aws-host: 54.145.119.113
-          deploy-script: java -jar /home/ubuntu/spring-petclinic-visits-service-3.2.4.jar
+      - name: List directory contents before Deploy
+        uses: docker://alpine:latest
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -lR /cloudbees/workspace
+
+      - name: Create SSH key file
+        uses: docker://alpine:latest
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          echo "$EC2_SSH_KEY" > /tmp/key.pem
+          chmod 600 /tmp/key.pem
