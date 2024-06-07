@@ -40,7 +40,9 @@ jobs:
           EC2_HOST: 54.145.119.113
         run: |
           
-          echo "$EC2_SSH_KEY" > /cloudbees/workspace/ssh_key
-          chmod 777 /cloudbees/workspace/ssh_key
+          echo "$EC2_SSH_KEY" > /cloudbees/workspace/ssh-key.pem
+          chmod 777 /cloudbees/workspace/ssh-key.pem
           ls -l /cloudbees/workspace
+          
+
           
