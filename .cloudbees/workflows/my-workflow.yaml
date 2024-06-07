@@ -31,6 +31,8 @@ jobs:
 
       - name: Deploy to EC2
         uses: docker://alpine:latest
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           apk update
           apk add openssh-client
@@ -40,7 +42,4 @@ jobs:
           
           scp -o StrictHostKeyChecking=no -i /cloudbees/workspace/ssh-key.pem /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ubuntu@ec2-54-145-119-113.compute-1.amazonaws.com:~
 
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_USER: ubuntu
-          EC2_HOST: 54.145.119.113
+        
