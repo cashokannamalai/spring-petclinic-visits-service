@@ -46,7 +46,7 @@ jobs:
           ls -l /cloudbees/workspace
           cat /cloudbees/workspace/ssh_key
 
-          sudo apt-get install -y openssh-client
+          apt-get install -y openssh-client
           
           
           scp -i /cloudbees/workspace/ssh_key -o StrictHostKeyChecking=no /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar ${EC2_USER}@${EC2_HOST}:/home/${EC2_USER}/spring-petclinic-visits-service-3.2.4.jar
