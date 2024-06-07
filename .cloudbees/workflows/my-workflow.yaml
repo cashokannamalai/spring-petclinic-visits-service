@@ -26,7 +26,6 @@ jobs:
       - name: List built files
         uses: docker://alpine:latest
         run: |
-          ls -l /cloudbees/workspace/target
           ls -l /tmp
   SonarQubeAnalysis:
     needs:
