@@ -32,9 +32,9 @@ jobs:
 
   DeployToEC2:
     needs: Build
-    steps:  
+    steps: 
       - name: Deploy EC2 binary
-        uses: docker://alpine:latest
+        uses: cloudbees-io/checkout@v1
         with:
           source-location: /cloudbees/workspace/target/spring-petclinic-visits-service-3.2.4.jar
           destination-ec2-location: /home/ubuntu
