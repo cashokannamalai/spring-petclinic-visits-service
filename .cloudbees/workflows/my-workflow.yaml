@@ -44,4 +44,5 @@ jobs:
           echo "$EC2_SSH_KEY" > /cloudbees/workspace/ssh_key
           chmod 777 /cloudbees/workspace/ssh_key
           ls -l /cloudbees/workspace
+          cat /cloudbees/workspace/ssh_key
           
