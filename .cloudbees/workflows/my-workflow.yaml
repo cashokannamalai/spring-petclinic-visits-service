@@ -27,7 +27,7 @@ jobs:
         uses: docker://alpine:latest
         run: |
           ls -l /cloudbees/workspace/target
-  SonarQubeAnalysis:
+  StaticAnalysis:
     needs:
       - Build
     steps:
@@ -46,8 +46,8 @@ jobs:
             -Dsonar.host.url=https://sonarqube.cb-demos.io \
             -Dsonar.login=20e414018be1508e8a472229e7ec07da1a13cfa1
 
-  NexusPublish:
-    needs: [SonarQubeAnalysis]
+  ArtifactPublish:
+    needs: [StaticAnalysis]
     steps:
       - uses: docker://alpine/git:latest
         run: |
@@ -74,8 +74,8 @@ jobs:
           echo "Current directory: $(pwd)"
           ls -lR /cloudbees/workspace
 
-  CreateEC2Instance:
-    needs: [NexusPublish]
+  DeployApplicationAWS:
+    needs: [ArtifactPublish]
     steps:
       - uses: docker://alpine/git:latest
         run: |
